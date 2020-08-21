@@ -1,7 +1,4 @@
-var square = {
-    border: (l) => (2*l),
-    area: (l) => (l*l)
-}
+var square = require('./square');
 
 function getArea(l){
     if(l<=0){
