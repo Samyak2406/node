@@ -1,13 +1,17 @@
 var square = require('./square');
 
 function getArea(l){
-    if(l<=0){
-        console.log("Invalid number");
-    }
-    else{
-        console.log(square.border(l));
-        console.log(square.area(l));
-    }
+    square(l, (err, sq) => {
+        if(err){
+            console.log(err.message);
+        }
+        else{
+            console.log(
+                sq.perimeter() + "   "+ sq.area()
+            );
+        }
+    });
+    console.log("End Of Function");
 }
 
 getArea(5);
