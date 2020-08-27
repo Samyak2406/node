@@ -10,7 +10,7 @@ const server = http.createServer((req, res) => {
     if (req.method == "GET") {
         var fileURL;
         if (req.url == "/") {
-            fileURL = "/index.html"
+            fileURL = "/index.html";
         }
         else{
             fileURL = req.url;
@@ -40,12 +40,11 @@ const server = http.createServer((req, res) => {
         }
     }
     else {
-
+        res.statusCode = 404;
+        res.setHeader("Content-Type", "text/html");
+        res.end("Only Get Method Is Supported");
+        return;
     }
-
-    // res.statusCode = 200;
-    // res.setHeader("Content-Type","text/html");
-    // res.end("Hello World");
 });
 
 server.listen(port, hostname, () => {
