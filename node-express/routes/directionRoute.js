@@ -25,4 +25,25 @@ directionRouter.route("/")
     res.end("Deleting everything");
 });
 
+directionRouter.route("/:directionId")
+.all((req,res,next)=>{//in req the data from the json will be there i.e from bodyparser
+    req.statusCode = 200;
+    res.setHeader("Content-Type","text/plain");
+    next();//The other request method will be called after this.....eg get, put, post
+})
+.get((req,res,next)=>{
+    res.end("Searchig for "+ req.params.directionId);
+})
+.post((req,res,next)=>{
+    res.statusCode = 403;
+    res.end("We dont do it here");
+})
+.put((req,res,next)=>{
+    res.write("Updating direction with id: "+ req.params.directionId);
+    res.end("\nWill update the direction: "+ req.body.description);
+})
+.delete((req,res,next)=>{
+    res.end("Deleting direction");
+});
+
 module.exports = directionRouter;
