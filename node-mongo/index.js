@@ -1,5 +1,6 @@
 const mongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const operations = require('./operations');
 
 const url = "mongodb://localhost:27017/";
 const dbName = "conFusion";
