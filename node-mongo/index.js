@@ -5,29 +5,34 @@ const admin = require('./operation');
 const url = 'mongodb://localhost:27017/';
 const dbName = 'conFusion';
 
-mongoClient.connect(url, (err, client) => {
-    assert.equal(err, null);
-    console.log("Connected To Server");
-    const db = client.db(dbName);
-    admin.insertDocument(db,{name:"Samyak",surname:"vora"},'direction',(result)=>{
-        console.log("-----> Inserted");
-        admin.findDocument(db,'direction',(result)=>{
-            console.log("-----> Found");
-            admin.updateDocument(db,{name:"Samyak"},{surname:"Vora"},'direction',(result)=>{
+mongoClient.connect(url).
+    then((client) => {
+        // assert.equal(err, null);
+        console.log("Connected To Server");
+        const db = client.db(dbName);
+        admin.insertDocument(db, { name: "Samyak", surname: "vora" }, 'direction')
+            .then((result) => {
+                console.log("-----> Inserted");
+                return admin.findDocument(db, 'direction');
+            })
+            .then((result) => {
+                console.log("-----> Found");
+                return admin.updateDocument(db, { name: "Samyak" }, { surname: "Vora" }, 'direction');
+            })
+            .then((result) => {
                 console.log("-----> Updated");
-                admin.findDocument(db,'direction',(result)=>{
-                    console.log("-----> Updated*");
-                    admin.removeDocument(db,{name:"Samyak",surname:"Vora"},'direction',(result)=>{
-                        console.log("-----> Removed");
-                        db.dropCollection('direction',(err,result)=>{
-                            assert.equal(err,null);
-                            console.log("-----> Dropped");
-                            client.close();
-                        });
-                    });
-                });
-            });
-        });
-    });
-});
-
+                return admin.findDocument(db, 'direction');
+            })
+            .then((result) => {
+                console.log("-----> Updated*");
+                return admin.removeDocument(db, { name: "Samyak", surname: "Vora" }, 'direction');
+            })
+            .then((result) => {
+                console.log("-----> Removed");
+                return db.dropCollection('direction');
+            })
+            .then((result) => {
+                console.log("-----> Dropped");
+                client.close();
+            }).catch((err)=>console.log(err));
+    }).catch((err)=>console.log(err));
