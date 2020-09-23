@@ -3,25 +3,34 @@ const directions = require('./models/direction');
 const url = 'mongodb://localhost:27017/conFusion';
 
 const connect = mongoose.connect(url);
-connect.then((db)=>{
+connect.then((db) => {
+    console.log("Connected");
 
-    var dir = directions({
+    directions.create({
         name: 'mumbai',
         description: 'MegaCity'
-    });
-
-    return dir.save()
-    
-})
-.then((rsave)=>{
-    console.log(rsave);
-    return directions.find({});
-})
-.then((_)=>{
-    console.log(_);
-    return directions.remove({});
-})
-.then((_)=>{
-    return mongoose.connection.close();
-})
-.catch((_)=>{});
+    })
+        .then((direction) => {
+            return directions.findByIdAndUpdate(direction._id, {
+                $set: { description: 'XL City' },
+            }, { new: true },// Pass the new updated value
+            ).exec();
+        },
+        )
+        .then((direction) => {
+            direction.comments.push({
+                rating: 5,
+                author: 'Samyak',
+                comment: 'City'
+            });
+            return direction.save();
+        })
+        .then((direction) => {
+            console.log(direction);
+            return directions.remove({});
+        })
+        .then((_) => {
+            return mongoose.connection.close();
+        })
+        .catch((_) => { });
+});
